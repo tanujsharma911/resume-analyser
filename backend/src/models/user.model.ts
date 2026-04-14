@@ -1,7 +1,23 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
-const userSchema = new mongoose.Schema(
+export interface UserType {
+  displayName: string;
+  username: string;
+  password: string;
+}
+
+export interface UserMethodsType {
+  isPasswordValid(password: string): Promise<boolean>;
+  generateAccessToken(): string;
+}
+
+type UserModel = Model<UserType, {}, UserMethodsType>;
+
+const userSchema = new mongoose.Schema<UserType, UserModel, UserMethodsType>(
   {
     displayName: {
       type: String,
@@ -13,6 +29,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       unique: [true, "Username already taken"],
       required: true,
+      lowercase: true,
+      trim: true,
       min: [3, "Minimum length of username is 3"],
       max: [24, "Maximum length of username is 24"],
     },
@@ -35,4 +53,18 @@ userSchema.pre("save", async function (next) {
   }
 });
 
-export const User = mongoose.model("User", userSchema);
+userSchema.methods.isPasswordValid = async function (password: string) {
+  return await bcrypt.compare(password, this.password);
+};
+
+userSchema.methods.generateAccessToken = function () {
+  return jwt.sign(
+    { userId: this._id.toString() },
+    process.env.ACCESS_TOKEN_SECRET!,
+    {
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY! as any,
+    },
+  );
+};
+
+export const User = mongoose.model<UserType, UserModel>("User", userSchema);
