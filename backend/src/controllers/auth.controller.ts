@@ -3,9 +3,11 @@ import { User } from "../models/user.model.js";
 import { cookieOptions } from "../constants.js";
 import mongoose from "mongoose";
 import { isValidUsername } from "../utils/validators.js";
+import tokenManager from "../tokenManager.js";
 
 const registerUser = async (req: Request, res: Response) => {
   try {
+
     let { username, password, displayName } = req.body;
 
     if (!username || typeof username !== "string") {
@@ -106,7 +108,13 @@ const loginUser = async (req: Request, res: Response) => {
 };
 
 const logoutUser = (req: Request, res: Response) => {
-  res
+  const token = req.cookies.accessToken;
+
+  if (token) {
+    tokenManager.blacklist(token);
+  }
+
+  return res
     .clearCookie("accessToken", cookieOptions)
     .status(200)
     .json({ message: "You are now logged out" });
