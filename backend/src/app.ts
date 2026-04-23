@@ -12,9 +12,9 @@ app.use(
   }),
 );
 
-import authRoute from "./routers/auth.route.js";
+import { authRouter } from "./routers/auth.route.js";
 import cookieParser from "cookie-parser";
 
-app.use("/api/auth", authRoute);
+app.use("/api/auth", authRouter);
 
 export { app };

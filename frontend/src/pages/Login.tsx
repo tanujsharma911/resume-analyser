@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
-import { loginUser } from "@/api/auth.api";
+import { loginUser } from "@/services/auth.api";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Spinner } from "@/components/ui/spinner";

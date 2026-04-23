@@ -2,7 +2,9 @@ import { Outlet } from "react-router";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { useUserStore } from "./store/user.store";
 import { useEffect } from "react";
-import { getUserData } from "./api/auth.api";
+import { getUserData } from "./services/auth.api";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "./components/AppSideBar";
 
 const queryClient = new QueryClient();
 
@@ -23,12 +25,20 @@ function App() {
         });
       }
     };
+
+    fetchUserData();
   }, [user]);
 
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <Outlet />
+        <SidebarProvider>
+          <AppSidebar />
+          <main>
+            <SidebarTrigger />
+            <Outlet />
+          </main>
+        </SidebarProvider>
       </QueryClientProvider>
     </>
   );

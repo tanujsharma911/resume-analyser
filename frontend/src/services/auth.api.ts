@@ -1,4 +1,4 @@
-import axios from "./axios";
+import { api } from "./axios";
 
 export async function loginUser({
   username,
@@ -8,7 +8,7 @@ export async function loginUser({
   password: string;
 }) {
   try {
-    const res = await axios.post("/api/auth/login", {
+    const res = await api.post("/api/auth/login", {
       username,
       password,
     });
@@ -29,7 +29,7 @@ export async function registerUser({
   displayName: string;
 }) {
   try {
-    const res = await axios.post("/api/auth/register", {
+    const res = await api.post("/api/auth/register", {
       username,
       password,
       displayName,
@@ -43,7 +43,7 @@ export async function registerUser({
 
 export async function logoutUser() {
   try {
-    const res = await axios.post("/api/auth/logout");
+    const res = await api.post("/api/auth/logout");
     return res;
   } catch (error) {
     console.log(error);
@@ -52,7 +52,7 @@ export async function logoutUser() {
 
 export async function getUserData() {
   try {
-    const res = await axios.post("/api/auth/get-me");
+    const res = await api.get("/api/auth/get-me");
     return res;
   } catch (error) {
     console.log(error);
