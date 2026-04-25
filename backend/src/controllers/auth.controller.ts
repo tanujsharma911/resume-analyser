@@ -1,54 +1,41 @@
 import type { Request, Response } from "express";
-import { User } from "../models/user.model.js";
 import { cookieOptions } from "../constants.js";
-import mongoose from "mongoose";
-import { isValidUsername } from "../utils/validators.js";
-import tokenManager from "../tokenManager.js";
+import { tokenManager } from "../tokenManager.js";
+import type { UserRepository } from "../repositories/user.repository.js";
 
 class AuthController {
+  private userRepository;
+
+  constructor(userRepository: UserRepository) {
+    this.userRepository = userRepository;
+  }
   public registerUser = async (req: Request, res: Response) => {
     try {
-      let { username, password, displayName } = req.body;
+      let { email, password, displayName } = req.body;
 
-      if (!username || typeof username !== "string") {
-        return res
-          .status(400)
-          .json({ message: "Please give a valid username" });
-      }
-      if (!password || typeof password !== "string") {
-        return res
-          .status(400)
-          .json({ message: "Please give a valid password" });
-      }
-      if (!displayName || typeof displayName !== "string") {
-        return res
-          .status(400)
-          .json({ message: "Please give a valid displayName" });
-      }
-      username = username.trim().toLowerCase();
-      password = password.trim();
-      displayName = displayName.trim();
-      if (!isValidUsername(username)) {
-        return res.status(400).json({
-          message: "Username must be valid and between 3 and 20 characters",
-        });
-      }
-
-      const user = await User.findOne({ username });
+      const user = await this.userRepository.findByEmail(email);
 
       if (user) {
-        return res.status(400).json({ message: "Username already exists" });
+        return res.status(400).json({ message: "User already exists" });
       }
 
-      const newUser = new User({ username, password, displayName });
+      let newUser;
 
       try {
-        await newUser.save();
+        newUser = await this.userRepository.create({
+          displayName,
+          email,
+          password,
+        });
       } catch (err: any) {
         if (err.code === 11000) {
-          return res.status(400).json({ message: "Username already exists" });
+          return res.status(400).json({ message: "User already exists" });
           throw err;
         }
+      }
+
+      if (typeof newUser === "undefined") {
+        return res.status(500).json({ message: "Internal server error" });
       }
 
       const accessToken = newUser.generateAccessToken();
@@ -59,7 +46,7 @@ class AuthController {
         .json({
           message: "You are now logged in",
           user: {
-            username: newUser.username,
+            email: newUser.email,
             displayName: newUser.displayName,
           },
         });
@@ -71,40 +58,18 @@ class AuthController {
 
   public loginUser = async (req: Request, res: Response) => {
     try {
-      let { username, password } = req.body;
+      let { email, password } = req.body;
 
-      if (!username || typeof username !== "string") {
-        return res
-          .status(400)
-          .json({ message: "Please give a valid username" });
-      }
-      if (!password || typeof password !== "string") {
-        return res
-          .status(400)
-          .json({ message: "Please give a valid password" });
-      }
-      username = username.trim().toLowerCase();
-      password = password.trim();
-      if (!isValidUsername(username)) {
-        return res.status(400).json({
-          message: "Username must be valid and between 3 and 20 characters",
-        });
-      }
-
-      const user = await User.findOne({ username });
+      const user = await this.userRepository.findByEmail(email);
 
       if (!user) {
-        return res
-          .status(400)
-          .json({ message: "Invalid username or password" });
+        return res.status(400).json({ message: "Invalid email or password" });
       }
 
       const isPasswordValid = await user.isPasswordValid(password);
 
       if (!isPasswordValid) {
-        return res
-          .status(400)
-          .json({ message: "Invalid username or password" });
+        return res.status(400).json({ message: "Invalid email or password" });
       }
 
       const accessToken = user.generateAccessToken();
@@ -114,7 +79,7 @@ class AuthController {
         .status(200)
         .json({
           message: "You are now logged in",
-          user: { username: user.username, displayName: user.displayName },
+          user: { email: user.email, displayName: user.displayName },
         });
     } catch (error) {
       console.error("auth.controller.ts :: loginUser :: ", error);
@@ -139,18 +104,14 @@ class AuthController {
     try {
       const userId = (req as any).userId;
 
-      if (mongoose.Types.ObjectId.isValid(userId) === false) {
-        return res.status(400).json({ message: "Invalid user ID" });
-      }
-
-      const user = await User.findById(userId);
+      const user = await this.userRepository.findById(userId);
 
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
 
       res.status(200).json({
-        user: { username: user.username, displayName: user.displayName },
+        user: { email: user.email, displayName: user.displayName },
       });
     } catch (error) {
       console.error("auth.controller.ts :: getMe :: ", error);

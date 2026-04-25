@@ -19,7 +19,7 @@ function App() {
         useUserStore.setState({
           user: {
             isLoggedIn: true,
-            username: res.data.user.username,
+            email: res.data.user.email,
             displayName: res.data.user.displayName,
           },
         });
@@ -34,7 +34,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <SidebarProvider>
           <AppSidebar />
-          <main>
+          <main className="w-full">
             <SidebarTrigger />
             <Outlet />
           </main>

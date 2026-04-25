@@ -6,7 +6,7 @@ dotenv.config();
 
 export interface UserType {
   displayName: string;
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -25,9 +25,9 @@ const userSchema = new mongoose.Schema<UserType, UserModel, UserMethodsType>(
       min: [2, "Minimum length of displayName is 2"],
       max: [100, "Maximum length of displayName is 100"],
     },
-    username: {
+    email: {
       type: String,
-      unique: [true, "Username already taken"],
+      unique: [true, "Account with this email is already created"],
       required: true,
       lowercase: true,
       trim: true,

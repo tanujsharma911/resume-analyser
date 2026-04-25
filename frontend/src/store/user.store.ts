@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 interface UserState {
   isLoggedIn: boolean;
-  username: string;
+  email: string;
   displayName: string;
 }
 
@@ -15,7 +15,7 @@ interface UserStoreType {
 export const useUserStore = create<UserStoreType>(() => ({
   user: {
     isLoggedIn: false,
-    username: "",
+    email: "",
     displayName: "",
   },
   setUserData: (payload: UserState) => {
@@ -25,7 +25,7 @@ export const useUserStore = create<UserStoreType>(() => ({
     useUserStore.setState({
       user: {
         isLoggedIn: false,
-        username: "",
+        email: "",
         displayName: "",
       },
     });
