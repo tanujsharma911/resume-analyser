@@ -27,6 +27,7 @@ export interface ResumeReportType {
   userId: mongoose.Schema.Types.ObjectId;
   jobDescription: string;
   resume: string;
+  issues: string[]; // A summary of the issues identified in the resume based on the job description.
   selfDescription: string;
   matchScore: number; // A score between 0 and 100 indicating how well the candidate matches the job description.
   technicalQuestions: TechnicalQuestion[];

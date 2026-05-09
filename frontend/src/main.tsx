@@ -1,4 +1,3 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
@@ -11,6 +10,7 @@ import Login from "./pages/Login.tsx";
 import Profile from "./pages/Profile.tsx";
 import AuthLayout from "./components/AuthLayout.tsx";
 import Register from "./pages/Register.tsx";
+import Report from "./pages/Report.tsx";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +38,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/report",
+        element: (
+          <AuthLayout>
+            <Report />
+          </AuthLayout>
+        ),
+      },
+      {
         path: "/:other",
         element: <NotFound />,
       },
@@ -46,7 +54,5 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>,
+  <RouterProvider router={router} />,
 );

@@ -104,6 +104,10 @@ const resumeReportSchema = new mongoose.Schema<ResumeReportType>({
     type: String,
     required: true,
   },
+  issues: {
+    type: [String],
+    required: true,
+  },
   selfDescription: {
     type: String,
     required: true,

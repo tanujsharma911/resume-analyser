@@ -3,30 +3,8 @@ import type mongoose from "mongoose";
 import type { ResumeReportType } from "../utils/types.js";
 
 export class ResumeReportRepository {
-  public async create({
-    userId,
-    jobDescription,
-    resume,
-    selfDescription,
-    matchScore,
-    technicalQuestions,
-    behavioralQuestions,
-    skillsGaps,
-    preparationPlan,
-    modelUsed,
-  }: ResumeReportType) {
-    const report = new ResumeReport({
-      userId,
-      jobDescription,
-      resume,
-      selfDescription,
-      matchScore,
-      technicalQuestions,
-      behavioralQuestions,
-      skillsGaps,
-      preparationPlan,
-      modelUsed,
-    });
+  public async create(reportGenerated: ResumeReportType) {
+    const report = new ResumeReport({ ...reportGenerated });
     return await report.save();
   }
   public async findById(id: string) {

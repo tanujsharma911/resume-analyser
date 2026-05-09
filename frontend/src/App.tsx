@@ -1,18 +1,24 @@
 import { Outlet } from "react-router";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { useUserStore } from "./store/user.store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getUserData } from "./services/auth.api";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "./components/AppSideBar";
+import Navbar from "./components/Navbar";
+import { Toaster } from "sonner";
 
 const queryClient = new QueryClient();
 
 function App() {
   const { user } = useUserStore();
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchUserData = async () => {
+      if (user.isLoggedIn) return;
+
+      setLoading(true);
+
       const res = await getUserData();
 
       if (res?.status === 200 && res?.data?.user) {
@@ -23,22 +29,25 @@ function App() {
             displayName: res.data.user.displayName,
           },
         });
+
+        console.log("User data fetched successfully:", res.data.user);
+        setLoading(false);
       }
     };
 
     fetchUserData();
-  }, [user]);
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <SidebarProvider>
-          <AppSidebar />
-          <main className="w-full">
-            <SidebarTrigger />
-            <Outlet />
-          </main>
-        </SidebarProvider>
+        <Navbar />
+        <Outlet />
+        <Toaster richColors />
       </QueryClientProvider>
     </>
   );

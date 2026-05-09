@@ -1,21 +1,47 @@
 import { GoogleGenAI } from "@google/genai";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
+import type { selfDescription } from "./test.js";
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GOOGLE_API_KEY!,
 });
 
 const resumeReportSchema = z.object({
+  candidate_name: z
+    .string()
+    .describe("Full name of the candidate whose resume is being analyzed."),
+  role: z
+    .string()
+    .describe(
+      "The role for which the candidate is applying. E.g., Software Engineer, Data Scientist, etc.",
+    ),
   matchScore: z
     .number()
     .describe(
       "A score between 0 and 100 indicating the candidate's suitability for the job.",
     ),
-  jobDescription: z
-    .string()
+  issues: z
+    .array(
+      z
+        .string()
+        .describe(
+          "A specific issue or concern identified in the candidate's resume.",
+        ),
+    )
     .describe(
-      "The job description for which the interview is being conducted.",
+      "A list of issues or concerns identified in the candidate's resume that may affect their suitability for the job.",
+    ),
+  jobDescription: z
+    .array(
+      z
+        .string()
+        .describe(
+          "A key requirement or responsibility from the job description.",
+        ),
+    )
+    .describe(
+      "The key requirements and responsibilities from the job description.",
     ),
   technicalQuestions: z
     .array(
@@ -98,7 +124,7 @@ export async function generateResumeReport({
     contents: prompt,
     config: {
       responseMimeType: "application/json",
-      responseJsonSchema: zodToJsonSchema(resumeReportSchema as any),
+      responseJsonSchema: z.toJSONSchema(resumeReportSchema),
     },
   });
 
