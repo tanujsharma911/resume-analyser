@@ -31,8 +31,6 @@ const userSchema = new mongoose.Schema<UserType, UserModel, UserMethodsType>(
       required: true,
       lowercase: true,
       trim: true,
-      min: [3, "Minimum length of username is 3"],
-      max: [24, "Maximum length of username is 24"],
     },
     password: {
       type: String,

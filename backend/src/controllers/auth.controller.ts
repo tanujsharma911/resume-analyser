@@ -13,26 +13,19 @@ class AuthController {
     try {
       let { email, password, displayName } = req.body;
 
-      const user = await this.userRepository.findByEmail(email);
+      const userExist = await this.userRepository.findByEmail(email);
 
-      if (user) {
+      if (userExist) {
         return res.status(400).json({ message: "User already exists" });
       }
 
       let newUser;
 
-      try {
-        newUser = await this.userRepository.create({
-          displayName,
-          email,
-          password,
-        });
-      } catch (err: any) {
-        if (err.code === 11000) {
-          return res.status(400).json({ message: "User already exists" });
-          throw err;
-        }
-      }
+      newUser = await this.userRepository.create({
+        displayName,
+        email,
+        password,
+      });
 
       if (typeof newUser === "undefined") {
         return res.status(500).json({ message: "Internal server error" });
@@ -100,7 +93,7 @@ class AuthController {
       .json({ message: "You are now logged out" });
   };
 
-  public getMe = async (req: Request, res: Response) => {
+  public me = async (req: Request, res: Response) => {
     try {
       const userId = (req as any).userId;
 
@@ -114,7 +107,7 @@ class AuthController {
         user: { email: user.email, displayName: user.displayName },
       });
     } catch (error) {
-      console.error("auth.controller.ts :: getMe :: ", error);
+      console.error("auth.controller.ts :: me :: ", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   };

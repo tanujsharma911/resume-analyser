@@ -1,4 +1,5 @@
 import express, { type Express } from "express";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 
 const app: Express = express();
@@ -13,8 +14,9 @@ app.use(
 );
 
 import { authRouter } from "./routers/auth.route.js";
-import cookieParser from "cookie-parser";
+import { resumeReportRouter } from "./routers/resume.route.js";
 
 app.use("/api/auth", authRouter);
+app.use("/api/resume", resumeReportRouter);
 
 export { app };

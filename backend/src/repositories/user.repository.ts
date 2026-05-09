@@ -1,8 +1,8 @@
 import { User } from "../models/user.model.js";
 
 class UserRepository {
-  public async findByEmail(emaiId: string) {
-    return await User.findOne({ emaiId });
+  public async findByEmail(emailId: string) {
+    return await User.findOne({ email: emailId });
   }
   public async findById(id: string) {
     return await User.findById(id);

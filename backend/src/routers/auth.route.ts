@@ -34,10 +34,10 @@ authRouter.post("/login", validateLogin, authController.loginUser);
 authRouter.post("/logout", verifyAuth, authController.logoutUser);
 
 /**
- * @route GET /api/auth/getme
+ * @route GET /api/auth/me
  * @desc Get the current user's information
  * @access Private
  */
-authRouter.get("/get-me", verifyAuth, authController.getMe);
+authRouter.get("/me", verifyAuth, authController.me);
 
 export { authRouter };

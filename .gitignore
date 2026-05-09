@@ -43,3 +43,5 @@ temp/
 
 # cache
 .cache/
+
+test.ts

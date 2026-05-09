@@ -1,39 +1,11 @@
 import mongoose from "mongoose";
-
-interface TechnicalQuestion {
-  question: string;
-  answer: string;
-  intention: string;
-}
-
-interface BehavioralQuestion {
-  question: string;
-  answer: string;
-  intention: string;
-}
-
-interface SkillsGap {
-  skill: string;
-  severity: "low" | "medium" | "high";
-}
-
-interface PreparationPlan {
-  day: number;
-  focus: string;
-  tasks: string[];
-}
-
-export interface InterviewReportType {
-  jobDescription: string;
-  resume?: string;
-  selfDescription?: string;
-  matchScore?: number; // A score between 0 and 100 indicating how well the candidate matches the job description.
-  technicalQuestions: TechnicalQuestion[];
-  behavioralQuestions: BehavioralQuestion[];
-  skillsGaps: SkillsGap[];
-  preparationPlan: PreparationPlan[];
-  modelUsed?: string; // The name of the model used for generating the report (e.g., "GPT-4").
-}
+import type {
+  BehavioralQuestion,
+  PreparationPlan,
+  ResumeReportType,
+  SkillsGap,
+  TechnicalQuestion,
+} from "../utils/types.js";
 
 /**
  * - question: The technical question may be asked.
@@ -118,21 +90,29 @@ const preparationPlanSchema = new mongoose.Schema<PreparationPlan>(
   },
 );
 
-const interviewReportSchema = new mongoose.Schema<InterviewReportType>({
+const resumeReportSchema = new mongoose.Schema<ResumeReportType>({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   jobDescription: {
     type: String,
     required: true,
   },
   resume: {
     type: String,
+    required: true,
   },
   selfDescription: {
     type: String,
+    required: true,
   },
   matchScore: {
     type: Number,
     min: 0,
     max: 100,
+    required: true,
   },
   technicalQuestions: [technicalQuestionSchema],
   behavioralQuestions: [behavioralQuestionSchema],
@@ -142,10 +122,11 @@ const interviewReportSchema = new mongoose.Schema<InterviewReportType>({
   modelUsed: {
     // The name of the model used for generating the report (e.g., "GPT-4").
     type: String,
+    required: true,
   },
 });
 
-export const InterviewReport = mongoose.model<InterviewReportType>(
-  "InterviewReport",
-  interviewReportSchema,
+export const ResumeReport = mongoose.model<ResumeReportType>(
+  "ResumeReport",
+  resumeReportSchema,
 );
