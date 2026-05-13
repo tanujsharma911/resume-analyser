@@ -1,7 +1,5 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardHeader,
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
@@ -10,7 +8,7 @@ import GenerateResumeReport from "@/components/GenerateResumeReport";
 const Home = () => {
   return (
     <main className="container mx-auto px-6 py-12">
-      <section className="grid gap-8 lg:grid-cols-2 lg:items-center">
+      <section className="grid gap-8 lg:grid-cols-2 lg:items-center motion-opacity-in-0 motion-translate-y-in-10 motion-blur-in-md">
         <div className="space-y-6">
           <h1 className="text-4xl font-extrabold leading-tight">
             Resume Analyzer — Improve your CV, Ace your Interview
@@ -28,25 +26,27 @@ const Home = () => {
       </section>
 
       <section className="mt-12">
-        <h2 className="mb-6 text-2xl font-semibold">What you'll get</h2>
+        <h2 className="mb-6 text-2xl font-semibold">Your Privacy Matters</h2>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <Card className="p-6">
-            <CardTitle>Actionable Improvements</CardTitle>
+            <CardTitle>Data Security</CardTitle>
             <CardDescription>
-              Bullet-point suggestions for phrasing, structure, and metrics.
+              Your resume and personal information are encrypted and stored
+              securely. We never sell or share your data.
             </CardDescription>
           </Card>
           <Card className="p-6">
-            <CardTitle>Interview Questions</CardTitle>
+            <CardTitle>Complete Confidentiality</CardTitle>
             <CardDescription>
-              Potential technical and behavioral questions tailored to your
-              experience.
+              Your data is used only to generate your analysis. It will not be
+              shared with anyone, including third parties.
             </CardDescription>
           </Card>
           <Card className="p-6">
-            <CardTitle>Role Alignment</CardTitle>
+            <CardTitle>Full Control</CardTitle>
             <CardDescription>
-              Guidance on tailoring your resume to specific job descriptions.
+              You can delete your account and all associated data at any time
+              from your profile settings.
             </CardDescription>
           </Card>
         </div>

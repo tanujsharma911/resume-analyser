@@ -31,15 +31,15 @@ function App() {
         });
 
         console.log("User data fetched successfully:", res.data.user);
-        setLoading(false);
       }
+      setLoading(false);
     };
 
     fetchUserData();
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="w-full text-center p-5">Loading...</div>;
   }
 
   return (

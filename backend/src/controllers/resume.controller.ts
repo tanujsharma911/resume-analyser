@@ -30,15 +30,6 @@ class ResumeReportController {
 
       const { jobDescription, selfDescription } = body;
 
-      // console.log("PDF Text:", pdfText.text); // Log the extracted text for debugging
-      fs.writeFile("extracted_resume.txt", cleanedText, (err) => {
-        if (err) {
-          console.error("Error writing extracted resume to file:", err);
-        } else {
-          console.log("Extracted resume text saved to extracted_resume.txt");
-        }
-      });
-
       fs.unlinkSync(file.path);
 
       const report = await generateResumeReport({

@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -36,98 +37,6 @@ type ReportData = {
   }>;
 };
 
-const reportData: { report: ReportData } = {
-  report: {
-    candidate_name: "Tanuj Sharma",
-    role: "Software Engineer",
-    matchScore: 85,
-    issues: [
-      "Candidate is currently an undergraduate student (graduating 2028), which may limit immediate full-time availability compared to experienced engineers.",
-      "Limited professional industry experience, primarily relying on internship and project work.",
-      "Lack of explicit large-scale production system experience serving millions of users.",
-    ],
-    jobDescription: [
-      "Design and scale large-scale distributed systems.",
-      "Strong CS fundamentals, data structures, and algorithms.",
-      "Backend or full-stack development experience.",
-      "Experience with cloud platforms, microservices, and containerization.",
-      "Collaborate on architecture, code reviews, and CI/CD.",
-    ],
-    technicalQuestions: [
-      {
-        question:
-          "How would you design a rate limiter for a high-traffic API to prevent service abuse?",
-        answer:
-          "I would use a token bucket or leaky bucket algorithm implemented with Redis to store counts per user ID or IP, ensuring low-latency checks.",
-        intention:
-          "To assess the candidate's understanding of system design, scalability, and performance optimization for high-traffic environments.",
-      },
-      {
-        question:
-          "Explain how you would handle database consistency in a microservices architecture when a transaction spans multiple services.",
-        answer:
-          "I would use the Saga pattern or two-phase commit, or ideally design services to be idempotent to handle failures using message queues like RabbitMQ or Kafka.",
-        intention:
-          "To test knowledge of distributed systems, transaction management, and reliability patterns.",
-      },
-    ],
-    behavioralQuestions: [
-      {
-        question:
-          "Describe a time you had to optimize a piece of code or a system that was underperforming. What was your approach?",
-        answer:
-          "During my internship, I implemented unit tests with Jest which helped identify bottlenecks in our component rendering, reducing development time and fixing layout issues.",
-        intention:
-          "To evaluate the candidate's problem-solving methodology and commitment to high-quality engineering.",
-      },
-      {
-        question:
-          "Tell me about a technical disagreement you had with a team member. How did you resolve it?",
-        answer:
-          "I would focus on evidence-based decision making, such as benchmarking or referring to established design patterns like Atomic Design to reach a consensus.",
-        intention:
-          "To assess collaboration, communication skills, and the ability to operate within a team-oriented engineering culture.",
-      },
-    ],
-    skillsGaps: [
-      {
-        skill: "Microservices Architecture Patterns",
-        severity: "medium",
-      },
-      {
-        skill: "Large-scale Distributed Systems Design",
-        severity: "high",
-      },
-    ],
-    preparationPlan: [
-      {
-        day: 1,
-        focus: "Distributed Systems Theory",
-        tasks: [
-          "Study CAP theorem and consistency models.",
-          "Learn about Load Balancers, Caching strategies, and Message Queues.",
-        ],
-      },
-      {
-        day: 2,
-        focus: "System Design",
-        tasks: [
-          "Practice designing scalable platforms like YouTube or Twitter.",
-          "Focus on database partitioning and sharding.",
-        ],
-      },
-      {
-        day: 3,
-        focus: "Behavioral/Culture Fit",
-        tasks: [
-          "Prepare STAR method responses for past projects.",
-          "Review FAANG engineering values and ownership expectations.",
-        ],
-      },
-    ],
-  },
-};
-
 const severityClass: Record<"low" | "medium" | "high", string> = {
   low: "bg-emerald-100 text-emerald-800",
   medium: "bg-amber-100 text-amber-800",
@@ -156,18 +65,12 @@ const Report = () => {
   return (
     <main className=" py-10">
       <div className="container mx-auto space-y-8 px-6">
+        <h1 className="scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance">
+          Resume Analysis Report
+        </h1>
         <Card className="overflow-hidden">
-          <CardContent className="grid gap-6 p-6 md:grid-cols-[1fr_240px] md:items-center">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tight">
-                {report?.candidate_name}
-              </h1>
-              <p className="text-muted-foreground">
-                Target Role: {report?.role}
-              </p>
-            </div>
-
-            <div className="rounded-xl border bg-white/80 p-4 text-center">
+          <CardContent className="flex items-center p-2 relative space-x-5 overflow-hidden">
+            <div className="rounded-lg border bg-white/80 p-4 min-w-50 text-center">
               <p className="text-sm text-muted-foreground">Match Score</p>
               <p
                 className={cn(
@@ -191,13 +94,35 @@ const Report = () => {
                 />
               </div>
             </div>
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold tracking-tight">
+                {report?.candidate_name}
+              </h1>
+              <p className="text-muted-foreground">
+                Target Role: {report?.role}
+              </p>
+            </div>
+
+            <img
+              src="./resume.png"
+              alt="resume"
+              className="absolute w-50 -rotate-12 grayscale pointer-events-none -right-10 top-4 opacity-20"
+            />
           </CardContent>
         </Card>
 
         <section className="grid gap-6 lg:grid-cols-2">
           <Card className="p-4">
             <CardHeader>
-              <CardTitle>Key Issues To Improve</CardTitle>
+              <CardTitle className="">
+                Key Issues To Improve
+                <Badge
+                  variant="outline"
+                  className="ml-3 text-rose-800 border-rose-200"
+                >
+                  {report?.issues.length}
+                </Badge>
+              </CardTitle>
               <CardDescription>
                 These are the most important risk areas affecting role fit.
               </CardDescription>
@@ -207,7 +132,7 @@ const Report = () => {
                 {report?.issues.map((issue) => (
                   <li
                     key={issue}
-                    className="rounded-lg border border-rose-100 bg-rose-50/60 p-3 text-sm"
+                    className="rounded-lg border bg-background p-3 text-sm"
                   >
                     {issue}
                   </li>
@@ -249,7 +174,7 @@ const Report = () => {
                   key={item.question}
                   className="space-y-2 rounded-lg border p-4"
                 >
-                  <h3 className="font-semibold">{item.question}</h3>
+                  <h3 className="font-semibold">Q. {item.question}</h3>
                   <p className="text-sm text-muted-foreground">
                     <span className="font-medium text-foreground">
                       Strong answer:{" "}
@@ -277,7 +202,7 @@ const Report = () => {
                   key={item.question}
                   className="space-y-2 rounded-lg border p-4"
                 >
-                  <h3 className="font-semibold">{item.question}</h3>
+                  <h3 className="font-semibold">Q. {item.question}</h3>
                   <p className="text-sm text-muted-foreground">
                     <span className="font-medium text-foreground">
                       Strong answer:{" "}

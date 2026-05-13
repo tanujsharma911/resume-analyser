@@ -39,7 +39,7 @@ function Navbar() {
   ];
   return (
     <NavigationMenu className="w-full sticky top-0 z-50 bg-background">
-      <div className="mx-auto flex justify-between py-2 px-20">
+      <div className="mx-auto flex justify-between py-2 px-8 md:px-20">
         <Link to={"/"}>
           <img
             src="./logo.png"

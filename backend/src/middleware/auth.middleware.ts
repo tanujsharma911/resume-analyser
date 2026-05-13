@@ -19,7 +19,14 @@ export const verifyAuth = (req: any, res: any, next: any) => {
     req.userId = decoded.userId;
 
     next();
-  } catch (err) {
+  } catch (err: any) {
+    if (err.name === "TokenExpiredError") {
+      return res
+        .clearCookie("accessToken")
+        .status(401)
+        .json({ message: "Session expired. Please log in again." });
+    }
+
     return res.status(401).json({ message: "Unauthorized" });
   }
 };
